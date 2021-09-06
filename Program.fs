@@ -6,6 +6,7 @@ open System
 open System.IO
 open System.Drawing
 open Data
+open System.Numerics
 open System.Runtime.InteropServices
 
 let compileShader (shader: uint32) (gl: GL) =
@@ -51,16 +52,6 @@ let createShader vertPath fragPath (gl: GL) =
 
 [<EntryPoint>]
 let main _ =
-    let vertices =
-        [| -0.5f
-           -0.5f
-           0.0f // Bottom-left vertex
-           0.5f
-           -0.5f
-           0.0f // Bottom-right vertex
-           0.0f
-           0.5f
-           0.0f |] // Top vertex
 
     let mutable options = WindowOptions.Default
     options.UpdatesPerSecond <- 60.0
@@ -95,6 +86,25 @@ let main _ =
 
             gl.BufferData(GLEnum.ArrayBuffer, size, teapotAllocationAddress, GLEnum.StaticDraw)
 
+            let uniformLocation =
+                gl.GetUniformLocation(shaderHandle, "matrix")
+
+            let foo = 
+
+            let translationMatrix =
+                new ReadOnlySpan<float32>(
+                    [| 1.0f
+                       1.0f
+                       0.0f
+                       1.0f
+                       1.0f
+                       0.0f
+                       1.0f
+                       1.0f
+                       0.0f |]
+                )
+
+            gl.UniformMatrix4(uniformLocation, false, translationMatrix)
             gl.UseProgram(shaderHandle)
             gl.BindVertexArray(vertexArrayObject)
             gl.VertexAttribPointer(0u, 3, GLEnum.Float, false, uint32 (3 * sizeof<float32>), IntPtr.Zero.ToPointer())
