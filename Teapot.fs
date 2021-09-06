@@ -1,4 +1,4 @@
-module VertexData
+module Data
 
 let teapot =
     [ 0.700000f,
